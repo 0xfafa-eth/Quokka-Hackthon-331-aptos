@@ -1,0 +1,16 @@
+[package]
+name = "faucet"
+version = "1.0.0"
+authors = []
+
+[addresses]
+faucet = "0x0629b1b00b749a903909aab5ccd68a453b874cce963dffce03e38e318bf348b6"
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]

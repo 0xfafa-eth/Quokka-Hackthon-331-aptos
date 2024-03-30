@@ -1,0 +1,37 @@
+[
+  {
+    "ticker": "QKA",
+    "img": "https://cdn.moralis.io/eth/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png",
+    "name": "Quokka",
+    "address": "0xbf42416113658b56e6313a22b1adaf99c85e359ed40c81531b0f26dc88702916",
+    "decimals": 8
+  },
+  {
+    "ticker": "VeQKA",
+    "img": "https://cdn.moralis.io/eth/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png",
+    "name": "VeQuokka",
+    "address": "0xc6cb92c8b1ba3f8913c436e34d71c7ca74e90bf35a09c212afb5378c015d442c",
+    "decimals": 8
+  },
+  {
+    "ticker": "USDC",
+    "img": "https://cdn.moralis.io/eth/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png",
+    "name": "USD Coin",
+    "address": "0x0629b1b00b749a903909aab5ccd68a453b874cce963dffce03e38e318bf348b6::faucet::USDC",
+    "decimals": 8
+  },
+  {
+    "ticker": "WETH",
+    "img": "https://cdn.moralis.io/eth/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.png",
+    "name": "Wrapped Ethereum",
+    "address": "0x0629b1b00b749a903909aab5ccd68a453b874cce963dffce03e38e318bf348b6::faucet::WETH",
+    "decimals": 8
+  },
+  {
+    "ticker": "WBTC",
+    "img": "https://cdn.moralis.io/eth/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599.png",
+    "name": "Wrapped Bitcoin",
+    "address": "0x0629b1b00b749a903909aab5ccd68a453b874cce963dffce03e38e318bf348b6::faucet::WBTC",
+    "decimals": 8
+  }
+]

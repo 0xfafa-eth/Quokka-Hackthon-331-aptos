@@ -1,0 +1,13 @@
+[package]
+name = "Chef"
+version = "0.0.1"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-framework/", rev = "mainnet" }
+
+
+[addresses]
+pancake = "2ca33c1d60dd10cf152d776da451ba6295e527c13d479632d977ce342365e962"
+pancake_smart_chef_dev = "0xd6f3b04b4f534d126e38ffd71f14cb0f84c25d039b6771933884f3cd47410341"
+pancake_smart_chef_default_admin = "0x062a13c8ad225c64ab32f5c0a3ed96a83c8a37eb8f3d1b666d75e1afd6abe2b0"
+test_coin = "0x16"

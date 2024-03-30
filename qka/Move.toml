@@ -1,0 +1,16 @@
+[package]
+name = "qka"
+version = "1.0.0"
+authors = []
+
+[addresses]
+qka =  "0x0a833b96857166ee62c787e949a3bb93ce34589c31c56998e1b2e9388f4b5d5f"
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]

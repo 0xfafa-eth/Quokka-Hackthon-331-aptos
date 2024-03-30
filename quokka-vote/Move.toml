@@ -1,0 +1,20 @@
+[package]
+name = "quokka-vote"
+version = "1.0.0"
+authors = []
+
+[addresses]
+contract = "0x593a539f3f3f0f2908b6e6e4cabb938571d86fdf2802ec8fa43a2e2711226391"
+contract_resource_account = "0x23542683329c7d57d2eed22dedc0e0bbbba5fd173c462186d2deaa7a3a14e015"
+test_coin = "0x16"
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dependencies.Chef]
+local = "../quokka-chef"
+
+[dev-dependencies]

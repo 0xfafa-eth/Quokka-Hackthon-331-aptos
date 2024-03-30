@@ -1,0 +1,1 @@
+aptos account derive-resource-account-address --address 0xd6f3b04b4f534d126e38ffd71f14cb0f84c25d039b6771933884f3cd47410341 --seed chef

@@ -1,0 +1,17 @@
+[package]
+name = "aptos-swap"
+version = "1.0.0"
+authors = []
+
+[addresses]
+main = "0x8c0e1c8cf624c602ecfb324e7a5011ad2128271b36544fdd6bab96218d2adb3a"
+pool = "0xc049f30b2e38984c914b70bf5e2f8d4d281773ef6b561339ae842560f4fa47b2"
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
