@@ -31,25 +31,25 @@ export function Faucet() {
         </div>
         <div className="inputs gap-4">
           {faucet_map.map((item, index) => (
-              <Button
+            <Button
               key={index}
-                onClick={async () => {
-                  try {
-                    await signAndSubmitTransaction({
-                      // @ts-ignore
-                      data: {
-                        function: `${faucet_contract}::faucet::mint`,
-                        typeArguments: [item?.coin_type || ''],
-                        functionArguments: ['1000000000'],
-                      },
-                    })
-                  } catch (e) {
-                    console.log(e)
-                  }
-                }}
-              >
-                {item?.name}
-              </Button>
+              onClick={async () => {
+                try {
+                  await signAndSubmitTransaction({
+                    // @ts-ignore
+                    data: {
+                      function: `${faucet_contract}::faucet::mint`,
+                      typeArguments: [item?.coin_type || ''],
+                      functionArguments: ['1000000000'],
+                    },
+                  })
+                } catch (e) {
+                  console.log(e)
+                }
+              }}
+            >
+              {item?.name}
+            </Button>
           ))}
         </div>
       </div>

@@ -13,6 +13,12 @@ export default function Header() {
         <Link to="/farm" className="link">
           <div className="headerItem">Farm</div>
         </Link>
+        <Link to="/ve" className="link">
+          Stake
+        </Link>
+        <Link to="/vote" className="link">
+          Vote
+        </Link>
         <Link to="/faucet" className="link">
           <div className="headerItem">Faucet</div>
         </Link>

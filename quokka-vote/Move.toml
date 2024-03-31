@@ -4,8 +4,8 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-contract = "0x593a539f3f3f0f2908b6e6e4cabb938571d86fdf2802ec8fa43a2e2711226391"
-contract_resource_account = "0x23542683329c7d57d2eed22dedc0e0bbbba5fd173c462186d2deaa7a3a14e015"
+contract = "0x992cdbd460ff82e246d0b547f7f2c58db5533b162b13dfe2263058a70c16844a"
+contract_resource_account = "0x1fd985dff3af603d6363878b0258704b8b72a1ed2f9bdac888b0c8d8daf3e943"
 test_coin = "0x16"
 [dev-addresses]
 

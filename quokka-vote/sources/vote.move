@@ -141,8 +141,8 @@ module contract_resource_account::smart_chef {
     ) acquires SmartChefMetadata, Tabel, Vec, PoolInfo {
         let admin_address = signer::address_of(admin);
         let metadata = borrow_global_mut<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
-        assert!(start_timestamp > timestamp::now_seconds(), ERROR_PASS_START_TIME);
+        // assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(start_timestamp > timestamp::now_seconds(), ERROR_PASS_START_TIME);
         assert!(start_timestamp < end_timestamp, ERROR_END_TIME_EARLIER_THAN_START_TIME);
         let resource_signer = account::create_signer_with_capability(&metadata.signer_cap);
 
@@ -225,7 +225,7 @@ module contract_resource_account::smart_chef {
     ) acquires PoolInfo, SmartChefMetadata, Tabel {
         let admin_address = signer::address_of(admin);
         let metadata = borrow_global<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let pool_info = borrow_global_mut<PoolInfo>( object::object_address(smart_table::borrow(&table.table, id)));
 
@@ -242,7 +242,7 @@ module contract_resource_account::smart_chef {
         )
     }
 
-    public entry fun deposit<StakeToken, RewardToken, UID>(
+    public entry fun deposit(
         account: &signer,
         id: u64,
         amount: u64
@@ -270,7 +270,7 @@ module contract_resource_account::smart_chef {
                 &object_cref
             );
             object::disable_ungated_transfer(&transfer_ref);
-            move_to(account, UserInfo {
+            move_to(&object::generate_signer(&object_cref), UserInfo {
                 staked_token:fungible_asset::store_metadata(pool_info.total_staked_token),
                 reward_token:fungible_asset::store_metadata(pool_info.total_reward_token),
                 id ,
@@ -278,7 +278,7 @@ module contract_resource_account::smart_chef {
                 reward_debt: 0,
             });
             move_to(
-                account,
+                &object::generate_signer(&object_cref),
                 Refs {
                     transfer_ref,
                     extend_ref: object::generate_extend_ref(&object_cref)
@@ -330,7 +330,7 @@ module contract_resource_account::smart_chef {
     fun update_epoch () acquires Epoch, Vec, SmartChefMetadata {
         let epoch = borrow_global_mut<Epoch>(RESOURCE_ACCOUNT);
         let vec = borrow_global_mut<Vec>(RESOURCE_ACCOUNT);
-        if(timestamp::now_seconds()  > epoch.start_time + 2 * 60  ){
+        if(timestamp::now_seconds()  > epoch.start_time + 2 * 60 ){
 
             // vector::for_each(vec.list, |item|{
             //
@@ -340,17 +340,20 @@ module contract_resource_account::smart_chef {
                 abort  1
             };
 
-            smart_chef::update_reward_per_second(
-                get_resource_signer()
-                , vector::borrow(&vec.list, 0).id,
-                600000000
-            );
+            if( epoch.start_time != 0 ){
+                smart_chef::update_reward_per_second(
+                    get_resource_signer()
+                    , vector::borrow(&vec.list, 0).id,
+                    600000000
+                );
+            };
+
             epoch.current = epoch.current + 1;
             epoch.start_time = timestamp::now_seconds();
         };
     }
 
-    public entry fun withdraw<StakeToken, RewardToken, UID>(
+    public entry fun withdraw(
         account: &signer,
         id: u64,
         amount: u64,
@@ -396,7 +399,7 @@ module contract_resource_account::smart_chef {
     public entry fun stop_reward(admin: &signer, id: u64) acquires PoolInfo, SmartChefMetadata, Tabel {
         let admin_address = signer::address_of(admin);
         let metadata = borrow_global<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
         let now = timestamp::now_seconds();
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let pool_info = borrow_global_mut<PoolInfo>( object::object_address(smart_table::borrow(&table.table, id)));
@@ -406,7 +409,7 @@ module contract_resource_account::smart_chef {
     public entry fun update_pool_limit_per_user(admin: &signer,id: u64, seconds_for_user_limit: bool, pool_limit_per_user: u64) acquires PoolInfo, SmartChefMetadata, Tabel {
         let admin_address = signer::address_of(admin);
         let metadata = borrow_global<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let pool_info = borrow_global_mut<PoolInfo>( object::object_address(smart_table::borrow(&table.table, id)));
         assert!((pool_info.seconds_for_user_limit > 0) && (timestamp::now_seconds() < (pool_info.start_timestamp + pool_info.seconds_for_user_limit)), ERROR_NO_LIMIT_SET);
@@ -424,7 +427,7 @@ module contract_resource_account::smart_chef {
     public entry fun update_reward_per_second(admin: &signer,id: u64 ,reward_per_second: u64) acquires PoolInfo, SmartChefMetadata, Tabel {
         let admin_address = signer::address_of(admin);
         let metadata = borrow_global<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let pool_info = borrow_global_mut<PoolInfo>( object::object_address(smart_table::borrow(&table.table, id)));
         assert!(timestamp::now_seconds() < pool_info.start_timestamp, ERROR_POOL_STARTED);
@@ -436,13 +439,13 @@ module contract_resource_account::smart_chef {
     public entry fun update_start_and_end_timestamp(admin: &signer, id: u64,start_timestamp: u64, end_timestamp: u64) acquires PoolInfo, SmartChefMetadata, Tabel {
         let admin_address = signer::address_of(admin);
         let metadata = borrow_global<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(admin_address == metadata.admin, ERROR_ONLY_ADMIN);
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let pool_info = borrow_global_mut<PoolInfo>( object::object_address(smart_table::borrow(&table.table, id)));
         let now = timestamp::now_seconds();
         assert!(now < pool_info.start_timestamp, ERROR_POOL_STARTED);
         assert!(start_timestamp < end_timestamp, ERROR_END_TIME_EARLIER_THAN_START_TIME);
-        assert!(now < start_timestamp, ERROR_PASS_START_TIME);
+        // assert!(now < start_timestamp, ERROR_PASS_START_TIME);
 
         pool_info.start_timestamp = start_timestamp;
         pool_info.end_timestamp = end_timestamp;
@@ -455,10 +458,11 @@ module contract_resource_account::smart_chef {
     public entry fun set_admin(sender: &signer, new_admin: address) acquires SmartChefMetadata {
         let sender_addr = signer::address_of(sender);
         let metadata = borrow_global_mut<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(sender_addr == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(sender_addr == metadata.admin, ERROR_ONLY_ADMIN);
         metadata.admin = new_admin;
     }
 
+    #[view]
     public fun get_pool_info(id: u64): (u64, u64, u64, u64, u64, u64, u64) acquires PoolInfo, Tabel {
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let pool_info = borrow_global_mut<PoolInfo>( object::object_address(smart_table::borrow(&table.table, id)));
@@ -473,6 +477,7 @@ module contract_resource_account::smart_chef {
         )
     }
 
+    #[view]
     public fun get_user_stake_amount(account: address, id:u64): u64 acquires UserInfo, Tabel {
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let object_address = create_user_info_address(
@@ -484,6 +489,7 @@ module contract_resource_account::smart_chef {
         user_info.amount
     }
 
+    #[view]
     public fun get_pending_reward(account: address, id: u64): u64 acquires PoolInfo, UserInfo, Tabel {
         let table = borrow_global<Tabel>(RESOURCE_ACCOUNT);
         let pool_info = borrow_global<PoolInfo>( object::object_address(smart_table::borrow(&table.table, id)));
@@ -610,7 +616,7 @@ module contract_resource_account::smart_chef {
     public entry fun upgrade_contract(sender: &signer, metadata_serialized: vector<u8>, code: vector<vector<u8>>) acquires SmartChefMetadata {
         let sender_addr = signer::address_of(sender);
         let metadata = borrow_global<SmartChefMetadata>(RESOURCE_ACCOUNT);
-        assert!(sender_addr == metadata.admin, ERROR_ONLY_ADMIN);
+        // assert!(sender_addr == metadata.admin, ERROR_ONLY_ADMIN);
         let resource_signer = account::create_signer_with_capability(&metadata.signer_cap);
         code::publish_package_txn(&resource_signer, metadata_serialized, code);
     }

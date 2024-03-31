@@ -4,9 +4,8 @@ import { formatUnits, parseUnits } from 'viem'
 import { ArrowDownOutlined, DownOutlined } from '@ant-design/icons'
 import tokenList from '../assets/tokenList.json'
 import { useWallet } from '@aptos-labs/wallet-adapter-react'
-import {  MoveStructId } from '@aptos-labs/ts-sdk'
+import { MoveStructId } from '@aptos-labs/ts-sdk'
 import { aptos, contract } from '../config'
-
 
 function Swap() {
   const [messageApi, contextHolder] = message.useMessage()
@@ -22,8 +21,7 @@ function Swap() {
   const [isError, setIsError] = useState(false)
   const [tokenOnePool, setTokenOnePool] = useState('0')
   const [tokenTwoPool, setTokenTwoPool] = useState('0')
-  const [currentPool, setCurrentPool] = useState();
-
+  const [currentPool, setCurrentPool] = useState()
 
   const {
     connected: isConnected,
@@ -32,10 +30,7 @@ function Swap() {
     account,
   } = useWallet()
 
-  function getTokenPool(
-    tokenOneType: string,
-    tokenTwoType: string,
-  ) {
+  function getTokenPool(tokenOneType: string, tokenTwoType: string) {
     setTokenOnePool('0')
     setTokenTwoPool('0')
     setCurrentPool(undefined)
@@ -44,11 +39,7 @@ function Swap() {
         payload: {
           function: `${contract}::liquidity_pool::liquidity_pool_address`,
           typeArguments: [],
-          functionArguments: [
-            tokenOneType,
-            tokenTwoType,
-            false
-          ],
+          functionArguments: [tokenOneType, tokenTwoType, false],
         },
       })
       .then((data) => {
@@ -59,25 +50,24 @@ function Swap() {
         console.log(err)
       })
   }
-  useEffect(()=>{
-    if(currentPool){
+  useEffect(() => {
+    if (currentPool) {
       aptos
-      .view({
-        payload: {
-          function: `${contract}::liquidity_pool::pool_reserves`,
-          typeArguments: [ `${contract}::liquidity_pool::LiquidityPool`,],
-          functionArguments: [
-            currentPool
-          ],
-        },
-      }).then(data =>{
-        // @ts-ignore
-        setTokenOnePool(data[0])
-        // @ts-ignore
-        setTokenTwoPool(data[1])
-      })
+        .view({
+          payload: {
+            function: `${contract}::liquidity_pool::pool_reserves`,
+            typeArguments: [`${contract}::liquidity_pool::LiquidityPool`],
+            functionArguments: [currentPool],
+          },
+        })
+        .then((data) => {
+          // @ts-ignore
+          setTokenOnePool(data[0])
+          // @ts-ignore
+          setTokenTwoPool(data[1])
+        })
     }
-  },[currentPool]);
+  }, [currentPool])
 
   // function handleSlippageChange(e) {
   //   setSlippage(e.target.value);
@@ -284,7 +274,14 @@ function Swap() {
               data: {
                 function: `${contract}::router::swap_entry`,
                 typeArguments: [],
-                functionArguments: [ token_one_amount.toString(), 0,tokenOne.address, tokenTwo.address, false, account?.address],
+                functionArguments: [
+                  token_one_amount.toString(),
+                  0,
+                  tokenOne.address,
+                  tokenTwo.address,
+                  false,
+                  account?.address,
+                ],
               },
             })
 
@@ -307,10 +304,7 @@ function Swap() {
                 .finally(() => {
                   setTokenOneAmount('0')
                   setTokenTwoAmount('0')
-                  getTokenPool(
-                    tokenOne.address,
-                    tokenTwo.address,
-                  )
+                  getTokenPool(tokenOne.address, tokenTwo.address)
                 })
             })
           }}

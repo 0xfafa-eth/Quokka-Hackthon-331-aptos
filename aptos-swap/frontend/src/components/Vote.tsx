@@ -1,5 +1,5 @@
 import { Button, Avatar, message, Popover } from 'antd'
-import { aptos, chef_contract } from '../config'
+import { aptos, vote_contract } from '../config'
 import { useEffect, useState } from 'react'
 import { useWallet } from '@aptos-labs/wallet-adapter-react'
 import { formatUnits } from 'viem'
@@ -21,7 +21,7 @@ export function LogoName({
   )
 }
 
-export function Farm() {
+export function Vote() {
   const [messageApi, contextHolder] = message.useMessage()
   const { submitTransaction, signTransaction, account } = useWallet()
   const [isLoading, setIsLoading] = useState(false)
@@ -104,17 +104,17 @@ export function Farm() {
 
   useEffect(() => {
     if (account?.address)
-      map.forEach((item, i) => {
+      map.forEach((item, i: string | number) => {
         aptos
           .view<string[]>({
             payload: {
-              function: `${chef_contract}::smart_chef::get_user_stake_amount`,
+              function: `${vote_contract}::smart_chef::get_user_stake_amount`,
               typeArguments: [],
               functionArguments: [account?.address, item.id.toString()],
             },
           })
           .then((data) => {
-            setMap((old_value) => {
+            setMap((old_value: any) => {
               let new_value = old_value
               new_value[i].user = data[0]
               return [...new_value]
@@ -124,13 +124,13 @@ export function Farm() {
         aptos
           .view<string[]>({
             payload: {
-              function: `${chef_contract}::smart_chef::get_pending_reward`,
+              function: `${vote_contract}::smart_chef::get_pending_reward`,
               typeArguments: [],
               functionArguments: [account?.address, item.id.toString()],
             },
           })
           .then((data) => {
-            setMap((old_value) => {
+            setMap((old_value: any) => {
               let new_value = old_value
               new_value[i].user_reward = data[0]
               return [...new_value]
@@ -140,7 +140,7 @@ export function Farm() {
         aptos
           .view<string[]>({
             payload: {
-              function: `${chef_contract}::smart_chef::get_pool_info`,
+              function: `${vote_contract}::smart_chef::get_pool_info`,
               typeArguments: [],
               functionArguments: [item.id.toString()],
             },
@@ -149,7 +149,7 @@ export function Farm() {
             setMap((old_value: any) => {
               let new_value = old_value
               new_value[i].pool_info_total_staked = data[0]
-              new_value[i].pool_info_reward_per_second = data[2]
+              new_value[i].pool_info_reward_per_second = data[2].toString()
               return [...new_value]
             })
           })
@@ -229,7 +229,7 @@ export function Farm() {
                   </div>
                 </Popover>
                 <div style={{ color: 'black' }}>
-                  我的质押:{' '}
+                  我的投票数:{' '}
                   {data.user != '-'
                     ? formatUnits(BigInt(data.user), 8).toString()
                     : '-'}
@@ -250,7 +250,7 @@ export function Farm() {
                       let txn_wait_sign = await aptos.transaction.build.simple({
                         sender: account?.address || '',
                         data: {
-                          function: `${chef_contract}::smart_chef::deposit`,
+                          function: `${vote_contract}::smart_chef::deposit`,
                           typeArguments: [],
                           functionArguments: [data.id.toString(), '100000000'],
                         },
@@ -261,7 +261,7 @@ export function Farm() {
                       submitTransaction({
                         transaction: txn_wait_sign,
                         senderAuthenticator: txn_with_sign,
-                      }).then((txn) => {
+                      }).then((txn: { hash: any }) => {
                         aptos
                           .waitForTransaction({
                             transactionHash: txn.hash,
@@ -276,7 +276,7 @@ export function Farm() {
                       })
                     }}
                   >
-                    Stake
+                    Vote
                   </Button>
 
                   {data.user != '-' ? (
@@ -289,7 +289,7 @@ export function Farm() {
                           await aptos.transaction.build.simple({
                             sender: account?.address || '',
                             data: {
-                              function: `${chef_contract}::smart_chef::withdraw`,
+                              function: `${vote_contract}::smart_chef::withdraw`,
                               typeArguments: [],
                               functionArguments: [
                                 data.id.toString(),
@@ -303,7 +303,7 @@ export function Farm() {
                         submitTransaction({
                           transaction: txn_wait_sign,
                           senderAuthenticator: txn_with_sign,
-                        }).then((txn) => {
+                        }).then((txn: { hash: any }) => {
                           aptos
                             .waitForTransaction({
                               transactionHash: txn.hash,
@@ -318,7 +318,7 @@ export function Farm() {
                         })
                       }}
                     >
-                      Unstake
+                      Unvote
                     </Button>
                   ) : (
                     <></>
